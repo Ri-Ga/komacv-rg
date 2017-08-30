@@ -1,0 +1,878 @@
+% \iffalse meta-comment
+%
+% Copyright (C) 2016-2017 by Richard Gay <richard.gay@t-online.de>
+% -------------------------------------------------------
+% 
+% This file may be distributed and/or modified under the
+% conditions of the LaTeX Project Public License, either version 1.2
+% of this license or (at your option) any later version.
+% The latest version of this license is in:
+%
+%    http://www.latex-project.org/lppl.txt
+%
+% and version 1.2 or later is part of all distributions of LaTeX 
+% version 1999/12/01 or later.
+%
+% \fi
+%
+% \iffalse
+%<*driver>
+\ProvidesFile{komacv-multilang.dtx}
+%</driver>
+%<package>\NeedsTeXFormat{LaTeX2e}[1999/12/01]
+%<package>\ProvidesPackage{komacv-multilang}
+%<*package>
+    [2017/08/30 v0.9 Package for multi-lingual extension to komacv]
+%</package>
+%
+%<*driver>
+\RequirePackage{scrlfile}
+\ReplaceClass{article}{scrartcl}
+\BeforePackage{doc}{\let\oldmaketitle\maketitle}
+\PassOptionsToClass{emulatestandardclasses,DIV=11}{scrartcl}
+\documentclass{ltxdoc}
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage[columns=2]{idxlayout}
+\usepackage{xspace}
+\usepackage{enumitem}
+\newlist{ExampleAspects}{enumerate*}{1}\setlist[ExampleAspects]{label=(\arabic*)}
+\usepackage{showexpl}
+\lstset{gobble=2,frame=trbl,backgroundcolor=\color{black!5!white},width=0.55\textwidth}
+\lstset{basicstyle=\footnotesize\fontfamily{pcr}\selectfont}
+\lstset{explpreset={columns=fixed,numbers=none,language={}}}
+\lstset{preset={\small\sffamily},overhang=3cm,pos=r,varwidth=false}
+\setkomafont{captionlabel}{\usekomafont{descriptionlabel}}
+\usepackage{pbox}
+\usepackage{csquotes}\MakeOuterQuote{"}
+\renewcommand*\figureformat{\textbf{\figurename~\thefigure}\autodot}
+\newcommand\NiceDescribeStuff[2]{% #1=margin text, #2=body text
+  \medskip\par\noindent\leavevmode%
+  \marginpar{\hfill\hbox to 0pt{\hss\pbox[t]{4\marginparwidth}{\ttfamily #1}}%
+    \hspace*{-0.85\marginparsep}}% NOTE: the 0.85 fixes an otherwise too close placement
+  \ifstrempty{#2}{\ignorespaces}{#2\smallskip\\}}
+\newcommand\NiceDescribeEnv[3][]{% #1=index list, #2=envname, #3=parameters
+  \NiceDescribeStuff{%
+    \textcolor{gray}{\cs{begin}}\string{#2\string}\\
+    \textcolor{gray}{\cs{end}}\string{#2\string}}{#3}%
+  \ifstrempty{#1}
+    {\SpecialEnvIndex{#1}}%
+    {\forcsvlist{\SpecialEnvIndex}{#1}}%
+  \ignorespaces}
+\newcommand\NiceDescribeMacro[2]{% #1=macro, #2=parameters
+  \NiceDescribeStuff{\hbox to 0pt{\hss\string#1}}{#2}%
+  \SpecialUsageIndex{#1}\ignorespaces}
+\newcommand\NiceDescribeConstant[1]{% #1=constant
+  \NiceDescribeStuff{#1\quad\kern 0pt\relax}{}}
+\newcommand\ThisPackage{\textsf{komacv-multilang}\xspace}
+\newcommand\BasePackage{\textsf{komacv}\xspace}
+\usepackage{hypdoc}
+\usepackage[capitalise,noabbrev,nameinlink]{cleveref}
+% The following packages are for the examples.
+% Note that for the documentation purpose we fake loading the \textsf{komacv}
+% class as a package. We disable loading of class files and rather load
+% \textsf{scrartcl} as the class of this document (see the hack above).  We save
+% sectioning commands as \textsf{komacv} redefines them.
+\usepackage{letltxmacro,etoolbox}
+% backup stuff before loading komacv
+\LetLtxMacro{\NormalSection}{\section}
+\LetLtxMacro{\NormalSubSection}{\subsection}
+\LetLtxMacro{\NormalSubSubSection}{\subsubsection}
+\newcommand\GetKomaFont[2]{\letcs#1{scr@fnt@#2}\expandafter\let\expandafter#1#1}
+\newcommand\LetKomaFont[2]{\setkomafont{#1}{#2}}
+\GetKomaFont\NormalSectionFont{section}
+\GetKomaFont\NormalSubSectionFont{subsection}
+\makeatletter
+% disable stuff
+\renewcommand\LoadClass[2][]{}
+\let\oldhypersetup=\hypersetup\def\hypersetup#1{}%
+% load komacv
+\@fileswithoptions\@clsextension[style=casual]{komacv}
+% restore stuff
+\parindent=1em\relax% seems to be the default
+\let\hypersetup\oldhypersetup
+\let\maketitle\oldmaketitle
+\LetLtxMacro{\CVSection}{\section}\GetKomaFont\CVSectionFont{section}\LetKomaFont{section}{\NormalSectionFont}
+\LetLtxMacro{\CVSubSection}{\subsection}\GetKomaFont\CVSubSectionFont{subsection}\LetKomaFont{subsection}{\NormalSubSectionFont}
+\LetLtxMacro{\CVSubSubSection}{\subsubsection}
+\lstset{preset={%
+  \LetLtxMacro{\section}{\CVSection}\LetKomaFont{section}{\CVSectionFont}%
+  \LetLtxMacro{\subsection}{\CVSubSection}\LetKomaFont{subsection}{\CVSubSectionFont}%
+  \LetLtxMacro{\subsubsection}{\CVSubSubSection}%
+  % fix the width of columns in each listing based on \linewidth
+  \setlength{\@hintscolwidth}{0.3\linewidth}%
+  \setlength{\@maincolwidth}{\linewidth-\@sepcolwidth-\@hintscolwidth}%
+  \setlength{\@dbitemmaincolwidth}{%
+    \@maincolwidth-\@hintscolwidth-2\@sepcolwidth}%
+  \setlength{\@dbitemmaincolwidth}{0.33\@dbitemmaincolwidth}%
+  % NOTE: \@sepcolwidth is actually missing in komacv...
+  \setlength{\@listdbitemmaincolwidth}{\@maincolwidth-\@sepcolwidth-\@listitemsymbolwidth}%
+  \setlength{\@listdbitemmaincolwidth}{0.475\@listdbitemmaincolwidth}%
+}}
+\LetLtxMacro{\section}{\NormalSection}
+\LetLtxMacro{\subsection}{\NormalSubSection}
+\LetLtxMacro{\subsubsection}{\NormalSubSubSection}
+\makeatother
+\usepackage[german,english]{babel}
+\usepackage[languages={english,german}]{komacv-multilang}
+% end of examples packages
+\EnableCrossrefs
+\CodelineIndex
+\RecordChanges
+\begin{document}
+  \DocInput{komacv-multilang.dtx}
+  \PrintChanges
+  \PrintIndex
+\end{document}
+%</driver>
+% \fi
+%
+% \CheckSum{0}
+%
+% \CharacterTable
+%  {Upper-case    \A\B\C\D\E\F\G\H\I\J\K\L\M\N\O\P\Q\R\S\T\U\V\W\X\Y\Z
+%   Lower-case    \a\b\c\d\e\f\g\h\i\j\k\l\m\n\o\p\q\r\s\t\u\v\w\x\y\z
+%   Digits        \0\1\2\3\4\5\6\7\8\9
+%   Exclamation   \!     Double quote  \"     Hash (number) \#
+%   Dollar        \$     Percent       \%     Ampersand     \&
+%   Acute accent  \'     Left paren    \(     Right paren   \)
+%   Asterisk      \*     Plus          \+     Comma         \,
+%   Minus         \-     Point         \.     Solidus       \/
+%   Colon         \:     Semicolon     \;     Less than     \<
+%   Equals        \=     Greater than  \>     Question mark \?
+%   Commercial at \@     Left bracket  \[     Backslash     \\
+%   Right bracket \]     Circumflex    \^     Underscore    \_
+%   Grave accent  \`     Left brace    \{     Vertical bar  \|
+%   Right brace   \}     Tilde         \~}
+%
+% \changes{v0.1}{2016/09/03}{Initial version (unpublished)}
+% \changes{v0.9}{2017/08/30}{Complete rewrite, splits off \textsf{multilang} package}
+%
+% \GetFileInfo{komacv-multilang.dtx}
+%
+% \DoNotIndex{\newcommand,\newenvironment,\def,\gdef,\edef}
+%
+%
+% \title{The \ThisPackage Package\thanks{This document
+%   corresponds to \ThisPackage~\fileversion, dated \filedate.
+%   The package is available online at
+%   \url{http://www.ctan.org/pkg/komacv-rg} and
+%   \url{https://github.com/Ri-Ga/komacv-rg}.}}
+% \author{Richard Gay \\ \texttt{richard.gay@t-online.de}}
+%
+% \maketitle
+%
+% \section{Introduction}
+% \label{sec:Introduction}
+%
+% The goal of \ThisPackage is to simplify the specification and maintenance of a
+% CV in multiple languages. More concretely, \ThisPackage enables one
+% \begin{itemize}[noitemsep]
+% \item to specify translations for pieces of content such that they are located
+%   closely together and easily identifiable as belonging together; and
+% \item to change the document's language as simple as changing the
+%   \textsf{babel} or \textsf{polyglossia} language.
+% \end{itemize}
+% That is, with \ThisPackage, you can continuously expand and improve your CV in
+% more than one language and when you actually want to use the CV, you choose a
+% language and restrict the content to what you want to show.
+%
+% The \ThisPackage package is realized as proxy to the \BasePackage class. The
+% latter package enables one to typeset CVs in one of three styles provided by
+% the package or in a custom-made style.  \ThisPackage uses the
+% \textsf{multilang} package to define a set of macros and environments that
+% establish a multilingual interface to
+% \BasePackage's macros and
+% \LaTeX's sectioning and list macros and environments.
+% The macros and environments of \ThisPackage provide a proxy to all macros of
+% \BasePackage that produce CV entries.
+% That is, with \ThisPackage, it should not be necessary to use \BasePackage
+% directly for CV entries, even though it is still possible to use \BasePackage
+% macros.
+%
+% The remainder of this introduction provides an example based on \BasePackage's
+% "casual" style.
+% The \ThisPackage package is not limited to a specific style but bases on the
+% macro interface provided by the core \BasePackage class (i.e., macros like
+% |\cvitem| and |\cventry|).
+% The example shows a toy excerpt of a multilingual CV with \ThisPackage
+% (\cref{fig:Example-multilang}). For comparison, the same CV is also produced
+% with pure \BasePackage (\cref{fig:Example-komacv}) and an ad-hoc approach to
+% specifying the translations.
+%
+% The example shows the document preamble, sectioning, a simple as
+% well as a more involved CV entry, date range specification, and list entries.
+% The example can be used for getting an intuition about \ThisPackage as well as
+% for deciding whether to use \ThisPackage (or rather an ad-hoc approach as in
+% \cref{fig:Example-komacv}).
+%
+% \begin{figure}[p]
+% \begin{LTXexample}[pos=t,width=\textwidth,overhang=0cm]
+% % in preamble
+% \documentclass[style=casual]{komacv}
+% \usepackage[english]{babel}
+% \usepackage[languages={english,german}]{komacv-multilang}
+% % in document
+% \begin{Section}{
+%     title/english       = Education,
+%     title/german        = Schulische Ausbildung}
+%   \BasicEntry{
+%     header/english      = {date of birth},
+%     header/german       = {Geburtsdatum},
+%     text/date           = {1970-01-01},
+%   }
+%   \EducationEntry{
+%     when/daterange      = {2010-08-01}{2015-07-31},
+%     degree/english      = M.Sc.{} Computer Science,
+%     degree/german       = Master Informatik,
+%     institution         = UCSB,
+%     where/english       = {California, USA},
+%     where/german        = {Kalifornien, USA},
+%     grade/english       = 4.00 GPA,
+%     grade/german        = {Gesamtnote 1,0},
+%     details/list        = {
+%       \Item{
+%         value/english   = {cryptography},
+%         value/german    = {Kryptographie},
+%       }
+%       \Item{
+%         value/english   = {software engineering},
+%         value/german    = {Software-Engineering},
+%       }
+%     },
+%   }
+% \end{Section}
+% \end{LTXexample}
+% \caption{Multilingual CV with \ThisPackage}
+% \label{fig:Example-multilang}
+% \end{figure}
+%
+% \begin{figure}[p]
+% \begin{LTXexample}[pos=t,width=\textwidth,overhang=0cm]
+% % in preamble
+% \documentclass[style=casual]{komacv}
+% \usepackage[english]{babel}
+% \newcommand\inEnglish[1]{#1}
+% \newcommand\inGerman[1]{}
+% % in document
+% \section{\inEnglish     {Education}%
+%          \inGerman      {Schulische Ausbildung}}
+% \cvitem{\inEnglish      {date of birth}%
+%         \inGerman       {Geburtsdatum}}
+%        {\inEnglish      {January 1, 1970}%
+%         \inGerman       {1.{} Januar 1970}}
+% \cventry                {08/2010 -- 07/2015}
+%         {\inEnglish     {M.Sc.{} Computer Science}%
+%          \inGerman      {Master Informatik}}
+%                         {UCSB}
+%         {\inEnglish     {California, USA}%
+%          \inGerman      {Kalifornien, USA}}
+%         {\inEnglish     {4.00 GPA}%
+%          \inGerman      {Gesamtnote 1,0}}%
+%         {\begin{compactitem}
+%         \item\inEnglish {cryptography}%
+%              \inGerman  {Kryptographie}
+%         \item\inEnglish {software engineering}%
+%              \inGerman  {Software-Engineering}
+%         \end{compactitem}}
+% \end{LTXexample}
+% \caption{Multilingual CV with \BasePackage}\medskip
+% \label{fig:Example-komacv}
+% \end{figure}
+% \clearpage
+%
+%
+% \section{Usage}
+% \label{sec:Usage}
+%
+%
+% \subsection{Package Loading}
+%
+% The \ThisPackage package is loaded like any other package.
+% The only requirements to pay attention to are,
+% firstly, \ThisPackage must be loaded after \textsf{babel} or
+% \textsf{polyglossia}, and
+% secondly, \ThisPackage must be loaded after the \BasePackage class.
+% This ensures that \ThisPackage can detect the document's language and that it
+% can apply fixes to \BasePackage.
+%
+% \NiceDescribeConstant{languages}
+% The \ThisPackage package has one package option: |languages|.
+% Through this option, the set of languages known to \ThisPackage is specified,
+% as a comma-separated list.
+% \cref{sec:Usage-Sections} includes an example of loading \ThisPackage.
+%
+%
+% \subsection{Sections}
+% \label{sec:Usage-Sections}
+%
+% The \ThisPackage package utilizes \textsf{multilang-sect} for sectioning
+% environments. Under the \BasePackage class, these environments produce
+% sections in the respective loaded \BasePackage style.
+% The following documentation essentially repeats what is also stated in the
+% \textsf{multilang} documentation.
+%
+% \NiceDescribeEnv{Section}{\marg{data}}
+% This environment shows a section.
+% It has a single, mandatory argument, named |title|.
+% It is a disablable environment, i.e., the argument |disabled| can be used in
+% \meta{data} to disable the display of the whole section.
+% This environment acts as a proxy for the |\section| macro as it is used by
+% \BasePackage (i.e., without optional argument and without the star).
+
+% \NiceDescribeEnv{SubSection}{\marg{data}}
+% This environment is analogous to the |Section| environment, just for
+% sub-sections.
+% Examples:
+%
+% \begin{LTXexample}[morekeywords={Section,SubSection}]
+% % in preamble
+% \documentclass[style=casual]{komacv}
+% \usepackage[english]{babel}
+% \usepackage[languages={english,german}]
+%            {komacv-multilang}
+% % in document
+% \begin{Section}{
+%     title/english = Work Experience,
+%     title/german  = Berufserfahrungen,
+%   }
+%   (section content)
+%   \begin{SubSection}{
+%       title/english = Teaching,
+%       title/german  = Lehre,
+%     }
+%     (subsection content)
+%   \end{SubSection}
+% \end{Section}
+% \end{LTXexample}
+% The example shows several aspects:
+% \begin{ExampleAspects}
+% \item how the \ThisPackage package is loaded and how its |languages| option
+%   is used
+%   and
+% \item how the |Section| and |SubSection| environments can be used.
+% \end{ExampleAspects}
+%
+%
+% \subsection{CV Entries}
+% \label{sec:Usage-Entries}
+%
+% The \BasePackage provides a set of macros for typesetting CV entries. In the
+% following, we introduce the proxies for these macros provided by \ThisPackage.
+%
+%
+% \NiceDescribeMacro{\BasicEntry}{\marg{data}}
+% This macro has two mandatory arguments, named |header| and |text|, and one
+% optional argument, named |spacing|.
+% The argument alias |both| can be used to specify the |header| and |text|
+% simultaneously.
+% It is a disablable macro, i.e., the argument |disabled| can be used in
+% \meta{data} to disable the display of the entry.
+% This macro acts as a proxy for \BasePackage's |\cvitem| macro.
+% That is, the value of the |header| argument is displayed in the hint column
+% and the |text| is displayed in the main column.
+% The value of the |spacing| argument specifies the vertical spacing below the
+% CV entry. Examples:
+%
+% \begin{LTXexample}[morekeywords={BasicEntry}]
+% \BasicEntry{
+%   header/english = date of birth,
+%   header/german  = Geburtsdatum,
+%   text/date      = 1970-01-01,
+% }
+% \BasicEntry{disabled,
+%   both/english   = {marital status}{single},
+%   both/german    = {Familienstand}{ledig},
+% }
+% \end{LTXexample}
+% The example shows several aspects:
+% \begin{ExampleAspects}
+% \item how translated values for the arguments |header| and |text| are
+%   specified,
+% \item how a date can be specified (in the |yyyy-mm-dd| format) for a localized
+%   display,
+% \item how the display of an entry can be disabled,
+% \item how the |both| argument can be used,
+%   and
+% \item how the \LaTeX{} source code can be aligned such that it is easily
+%   readable despite the presence of translations.
+% \end{ExampleAspects}
+%
+%
+% \NiceDescribeMacro{\CommentedEntry}{\marg{data}}
+% This macro has three mandatory arguments, named |header|, |text|, and
+% |comment|, as well as one optional argument named |spacing|.
+% The argument alias |all| can be used to specify |header|, |text|, and
+% |comment| simultaneously.
+% It is a disablable macro, i.e., the argument |disabled| can be used in
+% \meta{data} to disable the display of the entry.
+% This macro acts as a proxy for \BasePackage's |\cvitemwithcomment| macro.
+% That is, the value of the |header| argument is displayed in the hint column,
+% the |text| is displayed in the main column and the |comment| is displayed
+% right-aligned in the main column.
+% The value of the |spacing| argument specifies the vertical spacing below the
+% CV entry. Examples:
+%
+% \begin{LTXexample}[morekeywords={CommentedEntry}]
+% \CommentedEntry{
+%   all/english    = {English}{fluent}
+%                    {(oral and written)},
+%   all/german     = {Englisch}{flie{\ss}end}
+%                    {(in Wort und Schrift)}
+% }
+% \CommentedEntry{
+%   header/english = German,
+%   header/german  = Deutsch,
+%   text/english   = mother tongue,
+%   text/german    = Muttersprache,
+%   comment        = {},
+% }
+% \end{LTXexample}
+% The example shows several aspects:
+% \begin{ExampleAspects}
+% \item how the |all| argument alias can be used,
+% \item how arguments can be broken into multiple lines,
+% \item how translated values for the arguments |header|, |text|, and |comment|
+%   are specified,
+%   and
+% \item how an argument can be left empty in all languages (|comment|).
+% \end{ExampleAspects}
+%
+%
+% \NiceDescribeMacro{\DoubleEntry}{\marg{data}}
+% This macro has four mandatory arguments, named
+% |header1|, |text1|, |header2|, and |text2|,
+% as well as one optional argument named |spacing|.
+% The argument aliases |first| and |second| can be used to specify |header1|,
+% and |text1|, respectively, |header2| and |text2| simultaneously.
+% It is a disablable macro, i.e., the argument |disabled| can be used in
+% \meta{data} to disable the display of the entry.
+% This macro acts as a proxy for \BasePackage's |\cvdoubleitem| macro.
+% That is, the value of the |header1| argument is displayed in the hint column,
+% and the values of |text1|, |header2|, and |text2| are displayed in a columned
+% fashion in the main column.
+% The value of the |spacing| argument specifies the vertical spacing below the
+% CV entry. Example:
+%
+% \begin{LTXexample}[morekeywords={DoubleEntry}]
+% \DoubleEntry{
+%   first  = {h1}{t1},
+%   second = {h2}{t2},
+% }
+% \end{LTXexample}
+% The example shows
+% how the |first| and |second| argument aliases can be used.
+% Further possibilities for specifying the arguments, including translations,
+% are analogous to the cases of |\BasicEntry| and |\DoubleEntry|.
+%
+%
+% \NiceDescribeMacro{\EducationEntry}{\marg{data}}
+% This macro has five mandatory arguments, named
+% |when|, |degree|, |institution|, |where|, and |grade|,
+% as well as two optional arguments, named |spacing| and |details|.
+% It is a disablable macro, i.e., the argument |disabled| can be used in
+% \meta{data} to disable the display of the entry.
+% This macro acts as a proxy for \BasePackage's |\cventry| macro.
+% That is, the value of the |where| argument is displayed in the hint column,
+% whereas the values for the other arguments are displayed in the main column
+% (in the order they are listed).
+% The value of the |spacing| argument specifies the vertical spacing below the
+% CV entry. Example:
+%
+% \begin{LTXexample}[morekeywords={EducationEntry}]
+% \EducationEntry{
+%   when/daterange = {2010-08-01}{2015-07-31},
+%   degree/english = M.Sc.{} Computer Science,
+%   degree/german  = Master Informatik,
+%   institution    = UCSB,
+%   where/english  = {California, USA},
+%   where/german   = {Kalifornien, USA},
+%   grade/english  = 4.00 GPA,
+%   grade/german   = {Gesamtnote 1,0},
+%   details        = {(e.g., honors, awards)},
+% }
+% \end{LTXexample}
+% The example shows a few notable aspects:
+% \begin{ExampleAspects}
+% \item how the arguments can be used,
+% \item how a date range can be specified (for the |when| argument),
+%   and
+% \item how curly braces can be used to deal with commas in argument values
+%   (for the |where|, |grade|, and |details| arguments).
+% \end{ExampleAspects}
+%
+%
+% \NiceDescribeMacro{\EmploymentEntry}{\marg{data}}
+% This macro has four mandatory arguments, named
+% |when|, |title|, |employer|, and |where|,
+% as well as two optional arguments, named |spacing| and |description|.
+% It is a disablable macro, i.e., the argument |disabled| can be used in
+% \meta{data} to disable the display of the entry.
+% This macro acts as a proxy for \BasePackage's |\cventry| macro, as also
+% |\EducationEntry|.
+% The |\EmploymentEntry| specializes to detailed entries about professional/work
+% experiences.
+% Example:
+%
+% \begin{LTXexample}[morekeywords={EmploymentEntry}]
+% \EmploymentEntry{
+%   when/daterange = {2015-08-01}{*},
+%   title/english  = Software engineer,
+%   title/german   = Softwareentwickler,
+%   employer       = XYZ Development,
+%   where/english  = {California, USA},
+%   where/german   = {Kalifornien, USA},
+%   description    = {Java, JavaScript},
+% }
+% \end{LTXexample}
+%
+% \NiceDescribeMacro{\AchievementEntry}{\marg{data}}
+% This macro has two mandatory arguments, named
+% |when| and |title|,
+% as well as four optional arguments, named |spacing|, |occasion|, |where|, and |description|.
+% It is a disablable macro, i.e., the argument |disabled| can be used in
+% \meta{data} to disable the display of the entry.
+% This macro acts as a proxy for \BasePackage's |\cventry| macro, as also
+% |\EducationEntry| and |\EmploymentEntry|.
+% The |\AchievementEntry| specializes to entries about achievements.
+% Example:
+%
+% \begin{LTXexample}[morekeywords={AchievementEntry}]
+% \AchievementEntry{
+%   when/date     = 2016-05-01,
+%   title/english = employee of the month,
+%   title/german  = Mitarbeiter des Monats,
+%   where         = XYZ Development,
+% }
+% \end{LTXexample}
+%
+%
+% \NiceDescribeMacro{\EntryListItem}{\marg{data}}
+% This macro has one mandatory argument, |item|, and one optional argument,
+% |label|.
+% It is a disablable macro, i.e., the argument |disabled| can be used in
+% \meta{data} to disable the display of the entry.
+% This macro acts as a proxy for \BasePackage's |\cvlistitem| macro.
+%
+% \NiceDescribeMacro{\EntryListDblItem}{\marg{data}}
+% This macro has two mandatory arguments, |first| and |second|, and one optional
+% argument, |spacing|.\footnote{Note that contrary to the \BasePackage
+% documentation, the optional argument to \cs{cvlistitem} and
+% \cs{cvlistdoubleitem} is also the spacing and not a label.}
+% The argument alias |both| can be used to specify |first| and |second|
+% simultaneously.
+% It is a disablable macro, i.e., the argument |disabled| can be used in
+% \meta{data} to disable the display of the entry.
+% This macro acts as a proxy for \BasePackage's |\cvlistdoubleitem| macro.
+% Examples:
+%
+% \begin{LTXexample}[morekeywords={EntryListDblItem,EntryListItem}]
+% \BasicEntry{
+%   header/english = programming,
+%   header/german  = Programmiersprachen,
+%   text/english   = {I am proficient in:},
+%   text/german    = {Ich beherrsche:}}
+% \EntryListDblItem{both = {Java}{C/C++}}
+% \EntryListItem   {item = PHP}
+% \end{LTXexample}
+%
+%
+% \subsection{Dates and Lists}
+%
+% The \ThisPackage package defines several datatypes, such as |date| and
+% |daterange|, which are illustrated multiple times in \cref{sec:Usage-Entries}.
+% The following is a complete list of all defined datatypes.
+%
+% \begin{description}
+% \item[|date|:]
+%   This datatype expects a date in the format |yyyy-mm-dd| and displays it in
+%   the regional format for dates.
+%
+% \item[|daterange|:]
+%   This datatype expects two dates in the format |yyyy-mm-dd| and displays them
+%   in the same format as |shortdate|, with a ``--'' in between.
+%   If the second date is ``|*|'', the text ``today'' (in the selected
+%   language) is displayed.
+%
+% \item[|shortdate|:]
+%   This datatype expects a date in the format |yyyy-mm-dd| and displays it in
+%   the format ``mm/yyyy''.
+%
+% \item[|list|:]
+%   This datatype expects a list of items and displays the items in a compact
+%   form. Items can be specified with the standard |\item| macro as well as with
+%   the multilingual |\Item|\marg{data} macro, whose \meta{data} parameter
+%   expected one mandatory argument, |value|.
+%   The following example shows both possibilities.\smallskip
+%
+% \begin{LTXexample}[morekeywords={list,Item}]
+% \BasicEntry{
+%   header/english = programming languages,
+%   header/german  = Programmiersprachen,
+%   text/list      = {
+%     \item PHP
+%     \Item{value     = Java}
+%     \Item{
+%       value/english = C and C++,
+%       value/german  = C und C++}}}
+% \end{LTXexample}
+%
+% \end{description}
+%
+%
+% \subsection{Tags}
+%
+% The \ThisPackage package utilizes \textsf{multilang-tags} for tag support.
+% Tag support enables one to easily switch between granularities and focuses of
+% a CV.
+% The following just provides an example from the context of typesetting CVs.
+% For more information, please consult the \textsf{multilang} documentation.
+%
+% \begin{LTXexample}[morekeywords={tags,DefineTagFilter,UseTagFilter}]
+% \DefineTagFilter{Programmer}{accept}{
+%   accept=PLDetails,     deny=OfficeDetails}
+% \DefineTagFilter{Consultant}{accept}{
+%   accept=OfficeDetails, deny=PLDetails}
+% \UseTagFilter{Consultant}
+% \begin{Section}{
+%     title/english    = Skills,
+%     title/german     = Qualifikationen}
+%   \BasicEntry{
+%     header/english   = Programming,
+%     header/german    = Programmiersprachen,
+%     text/list        = {
+%       \Item{value    = {Java, C/C++}}
+%       \Item{tags     = PLDetails,
+%             value    = {\LaTeX, Bash}}}}
+%   \BasicEntry{header = Software,
+%     text/list        = {
+%       \Item{value    = MS Office}
+%       \Item{tags     = OfficeDetails,
+%             value    = Adobe InDesign}}}
+% \end{Section}
+% \end{LTXexample}
+%
+% \clearpage
+%
+% \StopEventually{}
+%\iffalse
+%<*package>
+%\fi
+%
+%
+% \section{Implementation}
+%
+% The \textsf{multilang} package provides the core feature of \ThisPackage:
+% defining multilingual macros and environments. We load the package with the
+% same options as \ThisPackage. That is, the |languages| option of \ThisPackage
+% is passed on to \textsf{multilang}.
+% We also utilize the \textsf{multilang} extensions for tags and sectioning macros.
+%    \begin{macrocode}
+\RequirePackageWithOptions{multilang}
+\RequirePackage{multilang-tags}
+\RequirePackage{multilang-sect}
+%    \end{macrocode}
+% For the date datatypes (\cref{sec:Implementation-DateFormatting}), we use the
+% following packages:
+%    \begin{macrocode}
+\PassOptionsToPackage{useregional}{datetime2}
+\RequirePackage{datetime2,datetime2-calc}
+\RequirePackage{translations}
+%    \end{macrocode}
+%
+%
+% \subsection{Datatypes}
+%
+% We define the datatypes before we define the multilingual macros and
+% environments, such that the datatypes are available in the macros and
+% environments.
+%
+% \subsubsection{Date Formatting}
+% \label{sec:Implementation-DateFormatting}
+%
+% First, we define the three datatypes. The code largely speaks for itself.
+%    \begin{macrocode}
+\NewMultilangType{date}{\DTMdate{#1}}
+\NewMultilangType{shortdate}{%
+  \DTMsetdatestyle{Myyyy}\DTMdate{#1}\DTMsetdatestyle{default}}
+\NewMultilangType[2]{daterange}{%
+  \DTMsetdatestyle{Myyyy}\DTMdate{#1} --
+%    \end{macrocode}
+% If the second argument to |daterange| equals ``|*|'', then the text ``today''
+% (in the translation for the current language) is displayed rather than a date.
+%    \begin{macrocode}
+  \ifstrequal{#2}{*}%
+    {\GetTranslation{today}}%
+    {\DTMdate{#2}}\DTMsetdatestyle{default}}
+%    \end{macrocode}
+% Next, we define the |Myyyy| date format, which we use for the |shortdate| and
+% |daterange| style.
+%    \begin{macrocode}
+\DTMnewdatestyle{Myyyy}{%
+  \def\DTMdisplaydate##1##2##3##4{\DTMtwodigits{##2}/##1}}
+%    \end{macrocode}
+% Finally, we provide a small set of initial translations for the ``today'' in
+% |daterange|.
+%    \begin{macrocode}
+\DeclareTranslation{english}{today}{today}
+\DeclareTranslation{german}{today}{heute}
+\DeclareTranslation{french}{today}{aujourd'hui}
+%    \end{macrocode}
+%
+%
+% \subsubsection{List Formatting}
+%
+% First, we define the list type, |list|.
+%    \begin{macrocode}
+\NewMultilangType{list}{\kcvml@list{#1}}
+%    \end{macrocode}
+%
+% \begin{macro}{\kcvml@list}
+% For the |list| datatype, the |\kcvml@list|\marg{items} macro formats an
+% itemized list of multiple items. The items of the list are specified by
+% \meta{items}. The items can be specified with |\item| macros as well as with
+% multilingual |\Item| macros (i.e., |\kcvml@listitem|).
+%    \begin{macrocode}
+\newcommand\kcvml@list[1]{%
+%    \end{macrocode}
+% To ensure a proper spacing, we use \textsf{komacv}'s |compactitem| environment
+% and encapsulate this environment inside a |minipage|.
+% Only inside this environment, we enable the |\Item| macro.
+%    \begin{macrocode}
+  \begin{minipage}[t]{\linewidth}%
+  \let\Item=\kcvml@listitem
+  \compactitem
+  #1%
+%    \end{macrocode}
+% For the case that the last line of the last list item has a small depth, the
+% |minipage| might yield a bad spacing to content following the list.
+% Hence, we add a |\strut| here.
+%    \begin{macrocode}
+  \ifhmode\unskip\strut\fi
+  \endcompactitem
+  \end{minipage}}
+%    \end{macrocode}
+% \end{macro}
+%
+% \begin{macro}{\kcvml@listitem}
+% The |\kcvml@listitem|\marg{data} enables multilingual items as a proxy to
+% the |\item| macro. We treat |\item| here as a macro with one argument, as it
+% usually does not harm to write ``|\item{text}|'' rather than ``|\item text|''.
+%    \begin{macrocode}
+\NewMultilangCmd{\kcvml@listitem}{disablable,
+  command=\item, margs=value}
+%    \end{macrocode}
+% \end{macro}
+%
+%
+% \subsection{CV Entries}
+%
+% \begin{macro}{\BasicEntry}
+% The |\BasicEntry|\marg{data} is a proxy to the |\cvitem| macro of
+% \BasePackage.
+%    \begin{macrocode}
+\NewMultilangCmd{\BasicEntry}{disablable,
+  command=\cvitem,
+  oargs={spacing},
+  margs={header,text},
+  alias/both={header,text},
+}
+%    \end{macrocode}
+% \end{macro}
+%
+% \begin{macro}{\CommentedEntry}
+% The |\CommentedEntry|\marg{data} is a proxy to the |\cvitemwithcomment| macro
+% of \BasePackage.
+%    \begin{macrocode}
+\NewMultilangCmd{\CommentedEntry}{disablable,
+  command=\cvitemwithcomment,
+  oargs={spacing},
+  margs={header,text,comment},
+  alias/all={header,text,comment},
+}
+%    \end{macrocode}
+% \end{macro}
+%
+% \begin{macro}{\DoubleEntry}
+% The |\DoubleEntry|\marg{data} is a proxy to the |\cvdoubleitem| macro of
+% \BasePackage.
+%    \begin{macrocode}
+\NewMultilangCmd{\DoubleEntry}{disablable,
+  command=\cvdoubleitem,
+  oargs={spacing},
+  margs={header1,text1,header2,text2},
+  alias/first={header1,text1},
+  alias/second={header2,text2},
+}
+%    \end{macrocode}
+% \end{macro}
+%
+% \begin{macro}{\EducationEntry}
+% The |\EducationEntry|\marg{data} is a proxy to the |\cventry| macro of
+% \BasePackage, specialized for education-related entries.
+%    \begin{macrocode}
+\NewMultilangCmd{\EducationEntry}{disablable,
+  command=\cventry,
+  oargs={spacing},
+  margs={when,degree,institution,where,grade,details},
+  defaults={details={}},
+}
+%    \end{macrocode}
+% \end{macro}
+%
+% \begin{macro}{\EmploymentEntry}
+% The |\EmploymentEntry|\marg{data} is a proxy to the |\cventry| macro of
+% \BasePackage, specialized for main work-related entries.
+%    \begin{macrocode}
+\NewMultilangCmd{\EmploymentEntry}{disablable,
+  command=\cventry,
+  oargs={spacing},
+  margs={when,title,employer,where,@grade,description},
+  defaults={@grade={}, description={}},
+}
+%    \end{macrocode}
+% \end{macro}
+%
+% \begin{macro}{\AchievementEntry}
+% The |\AchievementEntry|\marg{data} is a proxy to the |\cventry| macro of
+% \BasePackage, specialized for achievements.
+%    \begin{macrocode}
+\NewMultilangCmd{\AchievementEntry}{disablable,
+  command=\cventry,
+  oargs={spacing},
+  margs={when,title,occasion,where,@grade,description},
+  defaults={@grade={}, occasion={}, where={}, description={}},
+}
+%    \end{macrocode}
+% \end{macro}
+%
+% \begin{macro}{\EntryListItem}
+% The |\EntryListItem|\marg{data} is a proxy to the |\cvlistitem| macro of
+% \BasePackage.
+%    \begin{macrocode}
+\NewMultilangCmd{\EntryListItem}{disablable,
+  command=\cvlistitem,
+  oargs={spacing},
+  margs={item},
+}
+%    \end{macrocode}
+% \end{macro}
+%
+% \begin{macro}{\EntryListDblItem}
+% The |\EntryListDblItem|\marg{data} is a proxy to the |\cvlistdoubleitem|
+% macro of \BasePackage.
+%    \begin{macrocode}
+\NewMultilangCmd{\EntryListDblItem}{disablable,
+  command=\cvlistdoubleitem,
+  oargs={spacing},
+  margs={first,second},
+  alias/both={first,second},
+}
+%    \end{macrocode}
+% \end{macro}
+%
+%\iffalse
+%</package>
+%\fi
+% \Finale
+\endinput

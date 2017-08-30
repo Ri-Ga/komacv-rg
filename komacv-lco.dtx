@@ -1,0 +1,616 @@
+% \iffalse meta-comment
+%
+% Copyright (C) 2017 by Richard Gay <richard.gay@t-online.de>
+% -------------------------------------------------------
+% 
+% This file may be distributed and/or modified under the
+% conditions of the LaTeX Project Public License, either version 1.2
+% of this license or (at your option) any later version.
+% The latest version of this license is in:
+%
+%    http://www.latex-project.org/lppl.txt
+%
+% and version 1.2 or later is part of all distributions of LaTeX 
+% version 1999/12/01 or later.
+%
+% \fi
+%
+% \iffalse
+%<*driver>
+\ProvidesFile{komacv-lco.dtx}
+%</driver>
+%<package>\NeedsTeXFormat{LaTeX2e}[1999/12/01]
+%<package>\ProvidesPackage{komacv-lco}
+%<*package>
+    [2017/08/30 v0.9 Letter class options usable for komacv]
+%</package>
+%
+%<*driver>
+\documentclass{ltxdoc}
+\usepackage[columns=2]{idxlayout}
+\usepackage{xspace}
+\usepackage{enumitem}
+\usepackage{keyvaltable}
+\usepackage{showexpl}
+\lstset{gobble=2,frame=trbl,backgroundcolor=\color{black!5!white},width=0.55\textwidth}
+\lstset{basicstyle=\footnotesize\fontfamily{pcr}\selectfont}
+\lstset{explpreset={columns=fixed,numbers=none,language={}}}
+\lstset{preset={\small\sffamily},overhang=3cm,pos=r,varwidth=false}
+\usepackage{pbox}
+\usepackage{csquotes}\MakeOuterQuote{"}
+\usepackage{filecontents}
+\begin{filecontents*}{demo.lco}
+\ProvidesFile{demo.lco}
+\KOMAoptions{fromemail=true,fromphone=false,frommobilephone=true}
+
+\setkomavar{fromfirstname}{John}
+\setkomavar{fromfamilyname}{Doe}
+\setkomavar{fromaddressstreet}{Main Street 1}
+\setkomavar{fromaddresscity}{12345 Springfield}
+
+\setkomavar{fromphone}[\Telefon~]{555\ 123456}
+\setkomavar{frommobilephone}[\Mobilefone~]{555\ 98765}
+\setkomavar{fromemail}[\Letter~]{john.doe@example.com}
+\setkomavar{place}{Springfield}
+
+\setkomavar{fromgithub}{\httpslink{github.com/JohnDoe}}
+\setkomavar{fromlinkedin}{\httpslink{linkedin.com/in/JohnDoe}}
+\setkomavar{fromurl}{www.example.com/~Doe}
+\end{filecontents*}
+\newcommand\NiceDescribeStuff[2]{% #1=margin text, #2=body text
+  \medskip\par\noindent\leavevmode%
+  \marginpar{\hfill\hbox to 0pt{\hss\pbox[t]{4\marginparwidth}{\ttfamily #1}}%
+    \hspace*{-0.85\marginparsep}}% NOTE: the 0.85 fixes an otherwise too close placement
+  \ifstrempty{#2}{\ignorespaces}{#2\smallskip\\}}
+\newcommand\NiceDescribeEnv[3][]{% #1=index list, #2=envname, #3=parameters
+  \NiceDescribeStuff{%
+    \textcolor{gray}{\cs{begin}}\string{#2\string}\\
+    \textcolor{gray}{\cs{end}}\string{#2\string}}{#3}%
+  \ifstrempty{#1}
+    {\SpecialEnvIndex{#1}}%
+    {\forcsvlist{\SpecialEnvIndex}{#1}}%
+  \ignorespaces}
+\newcommand\NiceDescribeMacro[2]{% #1=macro, #2=parameters
+  \NiceDescribeStuff{\hbox to 0pt{\hss\string#1}}{#2}%
+  \SpecialUsageIndex{#1}\ignorespaces}
+\newcommand\NiceDescribeConstant[1]{% #1=constant
+  \NiceDescribeStuff{#1\quad\kern 0pt\relax}{}}
+\newcommand\ThisPackage{\textsf{komacv-lco}\xspace}
+\usepackage{hypdoc}
+\usepackage[capitalise,noabbrev,nameinlink]{cleveref}
+\usepackage{komacv-lco}
+\EnableCrossrefs
+\CodelineIndex
+\RecordChanges
+\begin{document}
+  \DocInput{komacv-lco.dtx}
+  \PrintChanges
+  \PrintIndex
+\end{document}
+%</driver>
+% \fi
+%
+% \CheckSum{0}
+%
+% \CharacterTable
+%  {Upper-case    \A\B\C\D\E\F\G\H\I\J\K\L\M\N\O\P\Q\R\S\T\U\V\W\X\Y\Z
+%   Lower-case    \a\b\c\d\e\f\g\h\i\j\k\l\m\n\o\p\q\r\s\t\u\v\w\x\y\z
+%   Digits        \0\1\2\3\4\5\6\7\8\9
+%   Exclamation   \!     Double quote  \"     Hash (number) \#
+%   Dollar        \$     Percent       \%     Ampersand     \&
+%   Acute accent  \'     Left paren    \(     Right paren   \)
+%   Asterisk      \*     Plus          \+     Comma         \,
+%   Minus         \-     Point         \.     Solidus       \/
+%   Colon         \:     Semicolon     \;     Less than     \<
+%   Equals        \=     Greater than  \>     Question mark \?
+%   Commercial at \@     Left bracket  \[     Backslash     \\
+%   Right bracket \]     Circumflex    \^     Underscore    \_
+%   Grave accent  \`     Left brace    \{     Vertical bar  \|
+%   Right brace   \}     Tilde         \~}
+%
+% \changes{v0.9}{2017/08/30}{Initial version}
+%
+% \GetFileInfo{komacv-lco.dtx}
+%
+% \DoNotIndex{\newcommand,\newenvironment,\def,\gdef,\edef}
+%
+% \title{The \ThisPackage Package\thanks{This document
+%   corresponds to \ThisPackage~\fileversion, dated \filedate.
+%   The package is available online at
+%   \url{http://www.ctan.org/pkg/komacv-rg} and
+%   \url{https://github.com/Ri-Ga/komacv-rg}.}}
+% \author{Richard Gay \\ \texttt{richard.gay@t-online.de}}
+%
+% \maketitle
+%
+% \section{Introduction}
+% \label{sec:Introduction}
+%
+% The \ThisPackage package provides means for unifying the input data to a CV
+% made with \textsf{komacv} and to a cover letter made with \textsf{scrlttr2}.
+% Concretely:
+% \begin{itemize}[noitemsep]
+% \item When the \ThisPackage package is used within a document of the
+%   \textsf{scrlttr2} class (e.g., a cover letter), it defines KOMA variables
+%   \textsf{komacv}'s data fields such as |github| and |linkedin|. Values for
+%   these variables can therefore be specified in letter-class-option (LCO)
+%   files (see the KOMA manual for more on these files).
+% \item When the \ThisPackage package is used within CV of the \textsf{komacv}
+%   class, it provides a macro for loading LCO files and setting the
+%   \textsf{komacv} variables based on these macros.
+% \item When the \ThisPackage package is used with neither \textsf{komacv} nor
+%   \textsf{scrlttr2} (e.g., a cover sheet), it provides the KOMA variables and
+%   macros for accessing them in the document.
+% \end{itemize}
+%
+% \section{Usage}
+%
+% The following code shows some basic usage of the \ThisPackage package.
+% The package provides the |\LoadLetterOption| macro for loading various
+% variables. The content of the variables can be displayed, e.g., via the
+% |\usekomavar| macro. The \ThisPackage package provides these macros, whose
+% interfaces originate from the \textsf{scrlttr2} class, for use with other
+% classes than \textsf{scrlttr2} -- particularly including \textsf{komacv}.
+%
+% \begin{LTXexample}
+% \usepackage{komacv-lco}
+% \LoadLetterOption{demo}
+%
+% \begin{document}
+% \usekomavar{fromname}\\
+% \usekomavar*{fromphone} \usekomavar{fromphone}\\
+% \usekomavar*{fromgithub} \usekomavar{fromgithub}
+% \end{document}
+% \end{LTXexample}
+%
+% The content of the LCO file, \texttt{demo.lco}, is displayed in
+% \cref{fig:lco-example}. This file shows many of the variables defined.
+% The remainder of this section provides the complete list of macros and
+% variables made available by \ThisPackage.
+%
+% \begin{figure}
+% \lstinputlisting{demo.lco}
+% \caption{\texttt{demo.lco}}
+% \label{fig:lco-example}
+% \end{figure}
+%
+%
+% \subsection{Variables}
+%
+% The \ThisPackage package provides a set of variables that can be set in LCO
+% files and can be used in \textsf{scrlttr2} letters, \textsf{komacv} CVs, and
+% other \LaTeX{} documents.
+% \Cref{tab:variables} shows the set of variables in alphabetic order.
+% \begin{itemize}
+% \item Most of the variables correspond to a macro that the \textsf{komacv}
+%   class defines and that is displayed in the second column of the
+%   \lcnamecref{tab:variables}. The \ThisPackage package ensures that when the
+%   value of a variable is set (via |\setkomavar|), the corresponding
+%   \textsf{komacv} macro is updated as well.
+%   Note that the macros are only defined in documents that use the
+%   \textsf{komacv} class. Documents based on another class can access the
+%   respective variables via |\usekomavar|.
+% \item Many of the variables are also defined by the \textsf{scrlttr2} class.
+%   The third column of the \lcnamecref{tab:variables} shows which of the
+%   variables these are. The \ThisPackage package makes all of the variables
+%   available for use in documents that use the \textsf{scrlttr2} class.
+% \item Some of the variables have a symbol assigned to them, as shown in the
+%   fourth column of the \lcnamecref{tab:variables}. The symbols are those that
+%   the \textsf{komacv} class uses.
+% \item Some of the variables have KOMA options of the same name. These
+%   variables can be used for disabling the display of the respective variable's
+%   content.
+% \item Two variables (from \textsf{scrlttr2}) have default values that are
+%   based on other, more fine-grained variables (from \textsf{komacv}). These
+%   variables are marked in the rightmost column of the
+%   \lcnamecref{tab:variables}.
+%   Concretely:
+%   \begin{itemize}[nosep]
+%   \item[$\star$]
+%     The `fromaddress' variable by default is set to a two-line
+%     combination of the contents of the `fromaddressstreet' and
+%     `fromaddresscity' variables.
+%   \item[$\star\star$]
+%     The `fromname' variable by default is set to the concatenation of the
+%     contents of the `fromfirstname' and the `fromfamilyname' variables.
+%   \end{itemize}
+% \end{itemize}
+%
+% \begin{table}
+%   \NewKeyValTable{variables}{
+%     name:   align=l, head=\small\textbf{variable name};
+%     macro:  align=l, head=\small\textbf{\textsf{komacv} macro};
+%     letter: align=c, head=\small\textbf{\textsf{scrlttr2}};
+%     symbol: align=c, head=\small\textbf{symbol};
+%     option: align=c, head=\small\textbf{option};
+%     default:align=c, head=\small\textbf{default};
+%   }
+%   \begin{KeyValTable}{variables}
+%   \Row{name=fromacadtitle,     macro=\cs{acadtitle},     letter=no,  option=no,  symbol=\usekomavar*{fromacadtitle}}
+%   \Row{name=fromaddress,       macro=\cs{address},       letter=yes, option=no,  symbol=\usekomavar*{fromaddress}, default=$\star$}
+%   \Row{name=fromaddresscity,   macro=\cs{addresscity},   letter=no,  option=no,  symbol=\usekomavar*{fromaddresscity}}
+%   \Row{name=fromaddressstreet, macro=\cs{addressstreet}, letter=no,  option=no,  symbol=\usekomavar*{fromaddressstreet}}
+%   \Row{name=fromemail,         macro=\cs{email},         letter=yes, option=yes, symbol=\usekomavar*{fromemail}}
+%   \Row{name=fromextrainfo,     macro=\cs{extrainfo},     letter=no,  option=yes, symbol=\usekomavar*{fromextrainfo}}
+%   \Row{name=fromfax,           macro=\cs{faxnr},         letter=yes, option=yes, symbol=\usekomavar*{fromfax}}
+%   \Row{name=fromfacebook,      macro=\cs{facebook},      letter=no,  option=yes, symbol=\usekomavar*{fromfacebook}}
+%   \Row{name=fromfamilyname,    macro=\cs{familyname},    letter=no,  option=no,  symbol=\usekomavar*{fromfamilyname}}
+%   \Row{name=fromfirstname,     macro=\cs{firstname},     letter=no,  option=no,  symbol=\usekomavar*{fromfirstname}}
+%   \Row{name=fromgithub,        macro=\cs{github},        letter=no,  option=yes, symbol=\usekomavar*{fromgithub}}
+%   \Row{name=fromlinkedin,      macro=\cs{linkedin},      letter=no,  option=yes, symbol=\usekomavar*{fromlinkedin}}
+%   \Row{name=frommobilephone,   macro=\cs{mobile},        letter=yes, option=yes, symbol=\usekomavar*{frommobilephone}}
+%   \Row{name=fromname,                                    letter=yes, option=no,  symbol=\usekomavar*{fromname}, default=$\star\star$}
+%   \Row{name=fromphone,         macro=\cs{phonenr},       letter=yes, option=yes, symbol=\usekomavar*{fromphone}}
+%   \Row{name=fromtwitter,       macro=\cs{twitter},       letter=no,  option=yes, symbol=\usekomavar*{fromtwitter}}
+%   \Row{name=fromurl,           macro=\cs{homepage},      letter=yes, option=yes, symbol=\usekomavar*{fromurl}}
+%   \Row{name=location,                                    letter=yes, option=no,  symbol=\usekomavar*{location}}
+%   \Row{name=place,                                       letter=yes, option=no,  symbol=\usekomavar*{place}}
+%   \end{KeyValTable}
+%   \caption{Variables for use in letter options}
+%   \label{tab:variables}
+% \end{table}
+%
+%
+% \subsection{Macros}
+%
+% The following macros imitate the behavior of \textsf{scrlttr2}. For a
+% documentation of the macros, we refer to the KOMA manual.
+% \begin{itemize}
+% \item
+%   |\newkomavar|\oarg{description}\marg{name}\\
+%   |\newkomavar*|\oarg{description}\marg{name}
+% \item
+%   |\setkomavar|\marg{name}\oarg{description}\marg{content}\\
+%   |\setkomavar*|\marg{name}\marg{description}
+% \item
+%   |\usekomavar|\oarg{command}\marg{name}\\
+%   |\usekomavar*|\oarg{command}\marg{name}
+% \item
+%   |\ifkomavarempty|\marg{name}\marg{true-code}\marg{false-code}\\
+%   |\ifkomavarempty*|\marg{name}\marg{true-code}\marg{false-code}
+% \item
+%   |\ifkomavar|\marg{name}\marg{true-code}\marg{false-code}
+% \item
+%   |\LoadLetterOption|\marg{name}
+%   |\LoadLetterOptions|\marg{names}
+% \end{itemize}
+% The following macros of the \textsf{komacv} class are provided by
+% \ThisPackage.
+% \begin{itemize}
+% \item |\emaillink|\oarg{link-text}\marg{link}
+% \item |\httplink|\oarg{link-text}\marg{link}
+% \end{itemize}
+% The following additional macros are defined by \ThisPackage.
+% \begin{itemize}
+% \item |\ifkomavarenabled|\marg{name}\marg{true-code}\marg{false-code}\\
+%   This macro executes \meta{true-code} if the variable with name \meta{name}
+%   is enabled (through the KOMA option of the same name) and executes
+%   \meta{false-code} otherwise.
+% \item |\httpslink|\oarg{link-text}\marg{link}\\
+%   This macro is analogous to |\httplink|, just for HTTPS links.
+% \end{itemize}
+%
+%
+% \section{Limitations}
+%
+% The current version of \ThisPackage has the following known limitations.
+% Some of them might be eliminated in future versions.
+%
+% \begin{itemize}
+% \item Enabled variables that are not already defined by \textsf{scrlttr2} are
+%   \emph{not} displayed in the head of the letter.
+%   If you want the additional variables to be displayed, you currently have to
+%   set the |firsthead| variable manually (see the \textsf{scrlttr2}
+%   documentation).
+% \item In a document based on the \textsf{komacv} class, KOMA options for
+%   enabling/disabling a variable must be set \emph{before} the content of the
+%   variable is set. Only then the respective \textsf{komacv} macro is set
+%   appropriately (i.e., set empty if the variable is disabled and set to the
+%   respective content when enabled). In short, as shown also in
+%   \cref{fig:lco-example}: First use |\KOMAoptions| and afterwards use
+%   |\setkomavar|.
+% \end{itemize}
+%
+% \clearpage
+%
+% \StopEventually{}
+%\iffalse
+%<*package>
+%\fi
+%
+%
+% \section{Implementation}
+%
+% We use the \textsf{etoolbox} package for simplifying the code and use
+% the \textsf{scrkbase} package for KOMA options and related macros.
+% The \textsf{marvosym} and \textsf{fontawesome} packages provide the symbols
+% for some of the variables defined by this package.
+%    \begin{macrocode}
+\RequirePackage{etoolbox}
+\RequirePackage{scrkbase}
+\RequirePackage{marvosym,fontawesome}
+%    \end{macrocode}
+%
+%
+% \subsection{KOMA Variables Interface}
+%
+% The ``public'' interface consists of the macros |\newkomavar|, |\setkomavar|,
+% and |\usekomavar|, which we define to have the same arguments as the
+% counterparts defined by \textsf{scrlttr2}.
+%
+% \begin{macro}{\newkomavar}
+% The |\newkomavar|\oarg{description}\marg{name} macro defines a new KOMA
+% variable with name \meta{name} and description \meta{description}.
+% If \meta{description} is omitted, no description is set.
+% The |\newkomavar*|\oarg{description}\marg{name} macro is defined equivalent to
+% the un-starred macro.
+%    \begin{macrocode}
+\providecommand{\newkomavar}{%
+  \@ifstar{\kcvlco@newkomavar}{\kcvlco@newkomavar}}
+\newcommand{\kcvlco@newkomavar}[2][\relax]{%
+  \ifkomavar{#2}%
+    {\kcvlco@error{KOMA variable `#2' already defined}}%
+    {\csdef{kcvlco@@var@#2}{\empty}%
+     \begingroup\def\@tempa{#1}\def\@tempb{\relax}%
+     \ifx\@tempa\@tempb\endgroup\else
+     \endgroup\csdef{kcvlco@@desc@#2}{#1}\fi}}
+%    \end{macrocode}
+% \end{macro}
+%
+% \begin{macro}{\setkomavar}
+% The |\setkomavar|\marg{name}\oarg{description}\marg{content} macro sets the
+% content of the variable with name \meta{name} to content \meta{content} and
+% sets the description of the variable to \meta{description}.
+% The |\setkomavar*|\marg{name}\marg{description} sets only the description of
+% the variable with name \meta{name} and sets it to \meta{description}.
+%    \begin{macrocode}
+\providecommand{\setkomavar}{%
+  \@ifstar{\kcvlco@setkomadesc}{\kcvlco@setkomavar}}
+\newcommand{\kcvlco@setkomavar}[1]{\kcvlco@onlyifdef{#1}{\@ifnextchar[%
+  {\kcvlco@setkomavar@i{#1}}{\kcvlco@setkomavar@i{#1}[\relax]}}}
+\long\def\kcvlco@setkomavar@i#1[#2]#3{%
+  \csdef{kcvlco@@value@#1}{#3}%
+  \csuse{scr@#1@postsetvar}%
+  \begingroup\def\@tempa{#2}\def\@tempb{\relax}%
+  \ifx\@tempa\@tempb\endgroup\else
+  \endgroup\csdef{kcvlco@@desc@#1}{#2}\fi}
+\newcommand{\kcvlco@setkomadesc}[2]{%
+  \csdef{kcvlco@@desc@#1}{#2}}
+%    \end{macrocode}
+% \end{macro}
+%
+% \begin{macro}{\usekomavar}
+% The |\usekomavar|\oarg{command}\marg{name} macro expands to the \meta{command}
+% applied to the content of the KOMA variable \meta{name}. If omitted,
+% \meta{command} is the identity.
+% The |\usekomavar*|\oarg{command}\marg{name} macro is analogous to
+% |\usekomavar| except that the description of the variable is used rather than
+% the content.
+%    \begin{macrocode}
+\providecommand{\usekomavar}{%
+  \@ifstar{\kcvlco@usekomadesc}{\kcvlco@usekomavar}}
+\newcommand{\kcvlco@usekomavar}[2][\@firstofone]{%
+  \kcvlco@onlyifdef{#2}{#1{\csuse{kcvlco@@value@#2}}}}
+\newcommand{\kcvlco@usekomadesc}[2][\@firstofone]{%
+  \kcvlco@onlyifdef{#2}{#1{\csuse{kcvlco@@desc@#2}}}}
+%    \end{macrocode}
+% \end{macro}
+%
+% \begin{macro}{\ifkomavarempty}
+% The |\ifkomavarempty|\marg{name}\marg{true-code}\marg{false-code} expands to
+% \meta{true-code} if the content of the KOMA variable \meta{name} is empty, and
+% expands to \meta{false-code} otherwise.
+% The |\ifkomavarempty*|\marg{name}\marg{true-code}\marg{false-code} is
+% analogous to |\ifkomavarempty|, except that the description of the variable is
+% checked for emptiness rather than the content.
+%    \begin{macrocode}
+\providecommand{\ifkomavarempty}{%
+  \@ifstar{\kcvlco@ifemptydesc}{\kcvlco@ifemptyvar}}
+\newcommand{\kcvlco@ifemptyvar}[1]{\ifcsvoid{kcvlco@@value@#1}}
+\newcommand{\kcvlco@ifemptydesc}[1]{\ifcsvoid{kcvlco@@desc@#1}}
+%    \end{macrocode}
+% \end{macro}
+%
+% \begin{macro}{\ifkomavar}
+% The |\ifkomavar|\marg{name}\marg{true-code}\marg{false-code} macro checks
+% whether the KOMA variable \meta{name} is defined and expands to
+% \meta{true-code} (positive case) or \meta{false-code} (negative case)
+% respectively.
+%    \begin{macrocode}
+\providecommand{\ifkomavar}[1]{\ifcsdef{kcvlco@@var@#1}}
+%    \end{macrocode}
+% \end{macro}
+%
+% \begin{macro}{\ifkomavarenabled}
+% The |\ifkomavarenabled|\marg{name}\marg{true-code}\marg{false-code} macro
+% checks whether the corresponding KOMA option for \meta{name} exists and is set
+% to |false|. In this case, the macro expands to \meta{false-code} and otherwise
+% expands to \meta{true-code}.
+%    \begin{macrocode}
+\providecommand{\ifkomavarenabled}[1]{\csuse{kcvlco@@enab@#1}}
+%    \end{macrocode}
+% \end{macro}
+%
+% \subsection{Letter Options Interface}
+%
+% \begin{macro}{\LoadLetterOption}
+% The |\LoadLetterOption|\marg{name} loads options from the file with filename
+% \meta{name} (an ``lco''-file, but without the file extension).
+% \begin{macro}{\LoadLetterOptions}
+% The |\LoadLetterOptions|\marg{names} loads options from the files in the
+% comma-separated list \meta{names} of file names (again without ``lco''
+% extension).
+%    \begin{macrocode}
+\providecommand\LoadLetterOption[1]{\input{#1.lco}}
+\providecommand\LoadLetterOptions[1]{\forcsvlist{\LoadLetterOption}{#1}}
+%    \end{macrocode}
+% \end{macro}
+% \end{macro}
+%
+%
+% \subsection{URL Formatting}
+%
+% \begin{macro}{\emaillink}
+% The |\emaillink|\oarg{text}\marg{link} macro, analogously to \textsf{komacv}'s
+% |\emaillink| macro, provides a means for typesetting a ``mailto'' link.
+%    \begin{macrocode}
+\providecommand*{\emaillink}[2][]{%
+  \ifstrempty{#1}{%
+    \href{mailto:#2}{\usefontofkomafont{emaillinkfont}#2}}{%
+    \href{mailto:#2}{\usefontofkomafont{emaillinkfont}#1}}}
+\IfExistskomafont{emaillinkfont}{}{\newkomafont{emaillinkfont}{}}
+%    \end{macrocode}
+% \end{macro}
+%
+% \begin{macro}{\httplink}
+% The |\httplink|\oarg{text}\marg{link} macro, analogously to \textsf{komacv}'s
+% |\httplink| macro, provides a means for typesetting an HTTP link.
+%    \begin{macrocode}
+\providecommand*{\httplink}[2][]{%
+  \ifstrempty{#1}{%
+    \href{http://#2}{\usefontofkomafont{httplinkfont}#2}}{%
+    \href{http://#2}{\usefontofkomafont{httplinkfont}#1}}}
+\IfExistskomafont{httplinkfont}{}{\newkomafont{httplinkfont}{}}
+%    \end{macrocode}
+% \end{macro}
+%
+% \begin{macro}{\httpslink}
+% The |\httpslink|\oarg{text}\marg{link} macro, analogously to \textsf{komacv}'s
+% |\httplink| macro, provides a means for typesetting an HTTPS link.
+%    \begin{macrocode}
+\providecommand*{\httpslink}[2][]{%
+  \ifstrempty{#1}{%
+    \href{https://#2}{\usefontofkomafont{httplinkfont}#2}}{%
+    \href{https://#2}{\usefontofkomafont{httplinkfont}#1}}}
+%    \end{macrocode}
+% \end{macro}
+%
+%
+% \subsection{Registering KOMA Variables with \textsf{komacv} Macros}
+%
+% \begin{macro}{\kcvlco@newvar}
+% The
+% |\kcvlco@newvar|\oarg{description}\marg{KOMAvar}\marg{CVmacro}\marg{conditional}
+% macro provides the KOMA variable \meta{KOMAvar}. If \meta{conditional} is
+% provided, a Boolean |\KOMAoptions| variable named \meta{KOMAvar} is
+% registered.
+% This Boolean is stored in |if|\meta{conditional} (as registered with
+% |\newif|).
+% The macro connects \meta{KOMAvar} with the \textsf{komacv} macro
+% \meta{CVmacro}. The connection establishes that when \meta{KOMAvar} is
+% changed, the \meta{CVmacro} is updated (though \emph{not} vice versa).
+%    \begin{macrocode}
+\newcommand\kcvlco@newvar[4][\relax]{%
+  \ifkomavar{#2}%
+    {\begingroup\def\@tempa{#1}\def\@tempb{\relax}%
+     \ifx\@tempa\@tempb\endgroup\else
+     \endgroup\setkomavar*{#2}{#1}\fi}
+    {\newkomavar[{#1}]{#2}}%
+  \ifstrempty{#4}%
+    {\csdef{kcvlco@@enab@#2}{\ifbool{true}}}%
+    {\csdef{kcvlco@@enab@#2}{\ifbool{#4}}\KOMA@ifkey{#2}{#4}}%
+%    \end{macrocode}
+% We use the \meta{postsetvar} hook of KOMA, which we also implement in our
+% |\setkomavar| surrogate.
+%    \begin{macrocode}
+  \@ifclassloaded{komacv}{%
+    \ifstrempty{#4}%
+      {\csappto{scr@#2@postsetvar}{\ifkomavarempty{#2}%
+          {\let#3=\empty}%
+          {\kcvlco@storekomavar{#2}{#3}}}}%
+      {\csappto{scr@#2@postsetvar}{\ifkomavarempty{#2}%
+          {\let#3=\empty}%
+          {\ifbool{#4}{\kcvlco@storekomavar{#2}{#3}}{\let#3=\empty}}}}%
+    \csuse{scr@#2@postsetvar}}{}}
+%    \end{macrocode}
+% \end{macro}
+%
+%
+% \subsection{Internal Helper Macros}
+%
+% \begin{macro}{\kcvlco@error}
+% The |\kcvlco@error|\marg{message} macro displays the given error
+% \meta{message}.
+%    \begin{macrocode}
+\providecommand{\kcvlco@error}[1]{%
+  \PackageError{komacv-lco}{#1}{}}
+%    \end{macrocode}
+% \end{macro}
+%
+% \begin{macro}{\kcvlco@errundef}
+% The |\kcvlco@errundef|\marg{name} macro displays an error message for
+% KOMA variable \meta{name} not being defined.
+% \meta{message}.
+%    \begin{macrocode}
+\providecommand{\kcvlco@errundef}[1]{%
+  \kcvlco@error{KOMA variable `#1' undefined}}
+%    \end{macrocode}
+% \end{macro}
+%
+% \begin{macro}{\kcvlco@onlyifdef}
+% The |\kcvlco@onlyifdef|\marg{name}\marg{code} macro displays an error message
+% if KOMA variable \meta{name} is undefined and expands to \meta{code}
+% otherwise.
+% \meta{message}.
+%    \begin{macrocode}
+\providecommand{\kcvlco@onlyifdef}[2]{%
+  \ifkomavar{#1}{#2}{\kcvlco@errundef{#1}}}
+%    \end{macrocode}
+% \end{macro}
+%
+% \begin{macro}{\kcvlco@storekomavar}
+% The |\kcvlco@storekomavar|\marg{name}\marg{macro} macro stores the content of
+% the KOMA variable \meta{name} into the macro \meta{macro}.
+%    \begin{macrocode}
+\newcommand{\kcvlco@storekomavar}[2]{\letcs#2{kcvlco@@value@#1}}
+%    \end{macrocode}
+% \end{macro}
+%
+%
+% \subsection{Declaration of Concrete Variables}
+%
+% \paragraph{Shared variables}
+% The following variables are shared by \textsf{scrlttr2} and \textsf{komacv}.
+% The conditionals used in the last argument to |\kcvlco@newvar| are taken over
+% from \textsf{scrlttr2}.
+%    \begin{macrocode}
+\kcvlco@newvar[\Telefon]{fromphone}{\phonenr}{@phone}
+\kcvlco@newvar[\Mobilefone]{frommobilephone}{\mobile}{@mobilephone}
+\kcvlco@newvar[\FAX]{fromfax}{\faxnr}{@fax}
+\kcvlco@newvar[\Letter]{fromemail}{\email}{@email}
+\kcvlco@newvar{fromurl}{\homepage}{@www}
+%    \end{macrocode}
+%
+% \paragraph{\textsf{scrlttr2} variables}
+% The following variables are \textsf{scrlttr2}-only.
+%    \begin{macrocode}
+\ifkomavar{fromname}{}{\newkomavar{fromname}}
+\setkomavar{fromname}{%
+  \usekomavar{fromfirstname}~\usekomavar{fromfamilyname}}
+\ifkomavar{fromaddress}{}{\newkomavar{fromaddress}}
+\setkomavar{fromaddress}{%
+  \usekomavar{fromaddressstreet}\\ \usekomavar{fromaddresscity}}
+\ifkomavar{place}{}{\newkomavar{place}}
+\ifkomavar{location}{}{\newkomavar{location}}
+%    \end{macrocode}
+%
+% \paragraph{\textsf{komacv} variables}
+% The following variables are \textsf{komacv}-only.
+%    \begin{macrocode}
+\kcvlco@newvar{fromfirstname}{\firstname}{}
+\kcvlco@newvar{fromfamilyname}{\familyname}{}
+\kcvlco@newvar{fromacadtitle}{\acadtitle}{}
+\kcvlco@newvar{fromaddressstreet}{\addressstreet}{}
+\kcvlco@newvar{fromaddresscity}{\addresscity}{}
+\kcvlco@newvar[\faTwitter]{fromtwitter}{\twitter}{kcvlco@@twitter}
+\kcvlco@newvar[\faGithub]{fromgithub}{\github}{kcvlco@@github}
+\kcvlco@newvar[\faFacebook]{fromfacebook}{\facebook}{kcvlco@@facebook}
+\kcvlco@newvar[\faLinkedin]{fromlinkedin}{\linkedin}{kcvlco@@linkedin}
+\kcvlco@newvar{fromextrainfo}{\extrainfo}{kcvlco@@extrainfo}
+%    \end{macrocode}
+%
+%\iffalse
+%</package>
+%\fi
+% \Finale
+\endinput

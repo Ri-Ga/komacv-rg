@@ -1,0 +1,149 @@
+% \iffalse meta-comment
+%
+% Copyright (C) 2017 by Richard Gay <richard.gay@t-online.de>
+% -------------------------------------------------------
+% 
+% This file may be distributed and/or modified under the
+% conditions of the LaTeX Project Public License, either version 1.2
+% of this license or (at your option) any later version.
+% The latest version of this license is in:
+%
+%    http://www.latex-project.org/lppl.txt
+%
+% and version 1.2 or later is part of all distributions of LaTeX 
+% version 1999/12/01 or later.
+%
+% \fi
+%
+% \iffalse
+%<*driver>
+\ProvidesFile{komacv-addons.dtx}
+%</driver>
+%<package>\NeedsTeXFormat{LaTeX2e}[1999/12/01]
+%<package>\ProvidesPackage{komacv-addons}
+%<*package>
+    [2017/08/30 v1 Various small addons and fixes to komacv]
+%</package>
+%
+%<*driver>
+\documentclass{ltxdoc}
+\usepackage[columns=2]{idxlayout}
+\usepackage{showexpl}
+\usepackage{xspace}
+\newcommand\ThisPackage{\textsf{komacv-addons}\xspace}
+\usepackage{hypdoc}
+\usepackage[capitalise,noabbrev,nameinlink]{cleveref}
+\EnableCrossrefs
+\CodelineIndex
+\RecordChanges
+\begin{document}
+  \DocInput{komacv-addons.dtx}
+  \PrintChanges
+  \PrintIndex
+\end{document}
+%</driver>
+% \fi
+%
+% \CheckSum{0}
+%
+% \CharacterTable
+%  {Upper-case    \A\B\C\D\E\F\G\H\I\J\K\L\M\N\O\P\Q\R\S\T\U\V\W\X\Y\Z
+%   Lower-case    \a\b\c\d\e\f\g\h\i\j\k\l\m\n\o\p\q\r\s\t\u\v\w\x\y\z
+%   Digits        \0\1\2\3\4\5\6\7\8\9
+%   Exclamation   \!     Double quote  \"     Hash (number) \#
+%   Dollar        \$     Percent       \%     Ampersand     \&
+%   Acute accent  \'     Left paren    \(     Right paren   \)
+%   Asterisk      \*     Plus          \+     Comma         \,
+%   Minus         \-     Point         \.     Solidus       \/
+%   Colon         \:     Semicolon     \;     Less than     \<
+%   Equals        \=     Greater than  \>     Question mark \?
+%   Commercial at \@     Left bracket  \[     Backslash     \\
+%   Right bracket \]     Circumflex    \^     Underscore    \_
+%   Grave accent  \`     Left brace    \{     Vertical bar  \|
+%   Right brace   \}     Tilde         \~}
+%
+% \changes{v1}{2017/08/30}{Initial documented version}
+%
+% \GetFileInfo{komacv-addons.dtx}
+%
+% \DoNotIndex{\newcommand,\newenvironment,\def,\gdef,\edef}
+%
+% \title{The \ThisPackage Package\thanks{This document
+%   corresponds to \ThisPackage~\fileversion, dated \filedate.
+%   The package is available online at
+%   \url{http://www.ctan.org/pkg/komacv-rg} and
+%   \url{https://github.com/Ri-Ga/komacv-rg}.}}
+% \author{Richard Gay \\ \texttt{richard.gay@t-online.de}}
+%
+% \maketitle
+%
+% \section{Introduction}
+% \label{sec:Introduction}
+%
+% This package provides a few extensions and fixes to the \textsf{komacv}
+% class.
+%
+% \StopEventually{}
+%\iffalse
+%<*package>
+%\fi
+%
+% \section{Extensions}
+%
+% \begin{macro}{\Signature}
+% The |\Signature|\oarg{width} draws a line of width \meta{width} (default:
+% $38.2\%$ of the text width (where $38.2\%=1-\frac{1}{\varphi}$, with $\varphi$
+% being the golden ratio).
+% \begin{macro}{\signaturecity}
+% Below the line, the macro puts the name of the city, which is expected in the
+% |\signaturecity| macro, and the current date (via |\today|).
+% Use |\renewcommand{\signaturecity}{...}| to specify the city.
+% \begin{macro}{\beforesigvspace}
+% Before the signature line, a vertical space of |\beforesigvspace| (default:
+% 3cm) is inserted. Use |\renewcommand{\beforesigvspace}{...}| to specify
+% another distance.
+%    \begin{macrocode}
+\newcommand*\signaturecity{}
+\newcommand*\beforesigvspace{3cm}
+\newcommand\Signature[1][0.382\textwidth]{%
+  \par
+  \begin{tabular}{@{}p{#1}@{}}
+    \rule{0pt}{\beforesigvspace}\\\hline
+    \signaturecity, \today\hfill
+  \end{tabular}}
+%    \end{macrocode}
+% \end{macro}
+% \end{macro}
+% \end{macro}
+%
+% \section{\textsf{komacv} Fixes}
+%
+% The construction of |\cvitem| based on a |tabular| environment seems to
+% sometimes produce undesired vertical space below a sequence of |\cvitem|s.
+% The following fix redefines |\cvitem|, based on its original definition, to
+% fix this vertical spacing problem.
+%    \begin{macrocode}
+\RequirePackage{letltxmacro}
+\LetLtxMacro{\kcvml@origcvitem}{\cvitem}
+\renewcommand*{\cvitem}[3][\@afterelementsvspace]{%
+  \kcvml@origcvitem[#1]{#2}{\@minipagetrue #3}}
+%    \end{macrocode}
+%
+% We also fix the default setup of |\@listdbitemmaincolwidth|. The only change
+% is that we also subtract |\@sepcolwidth| from |\@maincolwidth|, because
+% |\cvlistdoubleitem| does include a horizontal separation of that width.
+%    \begin{macrocode}
+\AtEndPreamble{
+  \ifdimequal{\listdbitemmaincolwidth}{0pt}{%
+    \setlength{\@listdbitemmaincolwidth}
+              {\@maincolwidth-\@sepcolwidth-\@listitemsymbolwidth}%
+    \setlength{\@listdbitemmaincolwidth}{0.475\@listdbitemmaincolwidth}%
+  }{}%
+}
+%    \end{macrocode}
+%
+%\iffalse
+%</package>
+%\fi
+% \Finale
+\endinput
