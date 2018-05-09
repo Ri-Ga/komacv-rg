@@ -163,7 +163,6 @@
 % \maketitle
 %
 % \section{Introduction}
-% \label{sec:Introduction}
 %
 % The goal of \ThisPackage is to simplify the specification and maintenance of a
 % CV in multiple languages. More concretely, \ThisPackage enables one
@@ -283,7 +282,6 @@
 %
 %
 % \section{Usage}
-% \label{sec:Usage}
 %
 %
 % \subsection{Package Loading}
@@ -300,11 +298,10 @@
 % The \ThisPackage package has one package option: |languages|.
 % Through this option, the set of languages known to \ThisPackage is specified,
 % as a comma-separated list.
-% \cref{sec:Usage-Sections} includes an example of loading \ThisPackage.
+% The following section includes an example of loading \ThisPackage.
 %
 %
 % \subsection{Sections}
-% \label{sec:Usage-Sections}
 %
 % The \ThisPackage package utilizes \textsf{multilang-sect} for sectioning
 % environments. Under the \BasePackage class, these environments produce
@@ -355,7 +352,6 @@
 %
 %
 % \subsection{CV Entries}
-% \label{sec:Usage-Entries}
 %
 % The \BasePackage provides a set of macros for typesetting CV entries. In the
 % following, we introduce the proxies for these macros provided by \ThisPackage.
@@ -580,7 +576,7 @@
 % \subsection{Dates and Lists}
 %
 % The \ThisPackage package defines several datatypes, such as |date| and
-% |daterange|, which are illustrated multiple times in \cref{sec:Usage-Entries}.
+% |daterange|, which are illustrated multiple times above.
 % The following is a complete list of all defined datatypes.
 %
 % \begin{description}
@@ -672,8 +668,7 @@
 \RequirePackage{multilang-tags}
 \RequirePackage{multilang-sect}
 %    \end{macrocode}
-% For the date datatypes (\cref{sec:Implementation-DateFormatting}), we use the
-% following packages:
+% For the date datatypes, we use the following packages:
 %    \begin{macrocode}
 \PassOptionsToPackage{useregional}{datetime2}
 \RequirePackage{datetime2,datetime2-calc}
@@ -688,7 +683,6 @@
 % environments.
 %
 % \subsubsection{Date Formatting}
-% \label{sec:Implementation-DateFormatting}
 %
 % First, we define the three datatypes. The code largely speaks for itself.
 %    \begin{macrocode}
