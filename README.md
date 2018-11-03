@@ -1,7 +1,7 @@
 The komacv-rg Bundle
 =======================
 
-Copyright (C) 2016-2017 Richard Gay
+Copyright (C) 2016-2018 Richard Grewe
 
 Released under the [LaTeX Project Public License](http://www.latex-project.org/lppl/) version 1.2 or later
 
